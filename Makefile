@@ -14,10 +14,7 @@ js:
 	java -jar tools/compiler.jar \
 	--js $(srcDir)/other/windowStack.js \
 	--js $(srcDir)/other/terminal.js  \
-	--js $(srcDir)/other/gui.js \
 	--js $(srcDir)/other/base64.js \
-	--js $(srcDir)/other/transportHandler.js \
-	--js $(srcDir)/other/json2.js \
 	--js $(srcDir)/other/swfobject.js \
 	--js $(srcDir)/other/resampler.js \
 	--js $(srcDir)/other/XAudioServer.js \
