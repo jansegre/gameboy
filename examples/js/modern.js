@@ -15,15 +15,6 @@ var keyZones = [
 function windowingInitialize() {
 	cout("windowingInitialize() called.", 0);
 	//Hide some windows:
-	//$("#terminal").hide();
-	$("#about").hide();
-	$("#settings").hide();
-	//$("#input_select").hide();
-	$("#instructions").hide();
-	$("#local_storage_popup").hide();
-	$("#local_storage_listing").hide();
-	$("#freeze_listing").hide();
-	$("#save_importer").hide();
 	mainCanvas = document.getElementById("mainCanvas");
 	fullscreenCanvas = document.getElementById("fullscreen");
 	try {
@@ -50,17 +41,12 @@ function registerGUIEvents() {
 	cout("In registerGUIEvents() : Registering GUI Events.", -1);
 	$("#terminal_clear_button").click(clear_terminal);
 	$("#local_storage_list_refresh_button").click(refreshStorageListing);
-	$("#terminal_close_button").click(function () { $("#terminal").hide() });
-	$("#about_close_button").click(function () { $("#about").hide() });
-	$("#settings_close_button").click(function () { $("#settings").hide() });
 	$("#input_select_close_button").click(function () { $("#input_select").hide() });
 	$("#instructions_close_button").click(function () { $("#instructions").hide() });
 	$("#local_storage_popup_close_button").click(function () { $("#local_storage_popup").hide() });
 	$("#local_storage_list_close_button").click(function () { $("#local_storage_listing").hide() });
 	$("#save_importer_close_button").click(function () { $("#save_importer").hide() });
 	$("#freeze_list_close_button").click(function () { $("#freeze_listing").hide() });
-	$("#GameBoy_about_menu").click(function () { $("#about").show() });
-	$("#GameBoy_settings_menu").click(function () { $("#settings").show() });
 	$("#local_storage_list_menu").click(function () { refreshStorageListing(); $("#local_storage_listing").show(); });
 	$("#freeze_list_menu").click(function () { refreshFreezeListing(); $("#freeze_listing").show(); });
 	$("#view_importer").click(function () { $("#save_importer").show() });
@@ -319,7 +305,6 @@ function registerGUIEvents() {
 	});
 	$("#view_fullscreen").click(fullscreenPlayer);
 	//new popupMenu(document.getElementById("GameBoy_view_menu"), document.getElementById("GameBoy_view_popup"));
-	$("#view_terminal").click(function () { $("#terminal").show() });
 	$("#view_instructions").click(function () { $("instructions").show() });
 	$("#gfx").on("mouseup", initNewCanvasSize);
 	$(window).on("resize", initNewCanvasSize);

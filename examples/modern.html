@@ -27,7 +27,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </a>
-      <a class="brand" href="#">Project name</a>
+      <a class="brand" href="#">GAME BOY <span class="color"><i class="p">c</i><i class="u">o</i><i class="g">l</i><i class="y">o</i><i class="c">r</i></span></a>
       <div class="nav-collapse collapse">
         <ul class="nav">
           <li class="active"><a href="#">Home</a></li>
@@ -40,27 +40,70 @@
 </div>
 
 <div class="container">
-    <div id="GameBoy">
-        <div class="menubar">
-            <span id="GameBoy_file_menu">File</span>
-            <span id="GameBoy_settings_menu">Settings</span>
-            <span id="GameBoy_view_menu">View</span>
-            <span id="GameBoy_about_menu">About</span>
+    <div id="GameBoy" class="hero-unit">
+        <div class="navbar navbar-static-top">
+            <div class="navbar-inner">
+                <ul class="nav">
+                    <li class="dropdown">
+                        <a href="#" id="GameBoy_file_menu" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="icon-file"></i> File<i class="caret"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-submenu">
+                                <a tabindex="-1" href="#"><i class="icon-folder-open"></i> Open As</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#" id="data_uri_clicker"><i class="icon-magnet"></i> Base 64 Encoding</a></li>
+                                    <li><a href="#" id="external_file_clicker"><i class="icon-globe"></i> URL Address</a></li>
+                                    <li><a href="#" id="internal_file_clicker"><i class="icon-file"></i> Local File</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#" id="save_SRAM_state_clicker"><i class="icon-ok"></i> Save Game Memory</a></li>
+                            <li><a href="#" id="save_state_clicker"><i class="icon-bookmark"></i> Save Freeze State</a></li>
+                            <li><a href="#" id="set_volume"><i class="icon-volume-up"></i> Set Volume</a></li>
+                            <li><a href="#" id="set_speed"><i class="icon-forward"></i> Set Speed</a></li>
+                            <li><a href="#" id="restart_cpu_clicker"><i class="icon-repeat"></i> Restart</a></li>
+                            <li><a href="#" id="run_cpu_clicker"><i class="icon-play"></i> Resume</a></li>
+                            <li><a href="#" id="kill_cpu_clicker"><i class="icon-pause"></i> Pause</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" id="GameBoy_view_menu" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="icon-eye-open"></i> View<i class="caret"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" data-toggle="modal" data-target="#terminal">Terminal</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#instructions">Controls</a></li>
+                            <li><a href="#" id="view_importer">Save Importer</a></li>
+                            <li><a href="#" id="local_storage_list_menu">Save Manager</a></li>
+                            <li><a href="#" id="freeze_list_menu">Freeze State Manager</a></li>
+                            <li><a href="#" id="view_fullscreen">Fullscreen Mode</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#" data-toggle="modal" data-target="#settings"><i class="icon-wrench"></i> Settings</a></li>
+                    <li><a href="#" data-toggle="modal" data-target="#about"><i class="icon-info-sign"></i> About</a></li>
+                </ul>
+            </div>
         </div>
-        <div id="gfx" class="thumbnail">
-            <canvas id="mainCanvas"></canvas><span id="title">GameBoy</span><span id="port_title">Online</span>
+        <div id="gfx">
+            <canvas id="mainCanvas"></canvas>
+            <div style="display: none"><span id="title">GameBoy</span><span id="port_title">Online</span></div>
         </div>
     </div>
-    <div id="terminal" class="window">
-        <div id="terminal_output"></div>
-        <div class="button_rack">
-            <button id="terminal_clear_button" class="left">Clear Messages</button>
-            <button id="terminal_close_button" class="right">Close Terminal</button>
+    <div id="terminal" class="modal hide fade">
+        <div class="modal-header"><h3>Terminal</h3></div>
+        <div class="modal-body">
+            <div id="terminal_output"></div>
+        </div>
+        <div class="modal-footer">
+            <a href="#" id="terminal_clear_button" class="btn">Clear</a>
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
         </div>
     </div>
-    <div id="about" class="window">
-        <div id="about_message">
-            <h1>GameBoy Online</h1>
+    <div id="about" class="modal fade hide">
+        <div class="modal-header">
+            <h3>GameBoy Online</h3>
+        </div>
+        <div class="modal-body">
             <p>This is a GameBoy Color emulator written purely in JavaScript by Grant
                 Galitz.</p>
             <p>The graphics blitting is done through HTML5 canvas, with the putImageData
@@ -75,12 +118,15 @@
                 GIT repository at: <a href="https://github.com/grantgalitz/GameBoy-Online"
                 target="_blank">https://github.com/grantgalitz/GameBoy-Online</a>.</p>
         </div>
-        <div class="button_rack">
-            <button id="about_close_button" class="center">Close Popup</button>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
         </div>
     </div>
-    <div class="window" id="settings">
-        <div id="toggle_settings">
+    <div id="settings" class="modal hide fade">
+        <div class="modal-header">
+            <h3>Settings</h3>
+        </div>
+        <div class="modal-body"><div id="toggle_settings">
             <div class="setting"><span>Enable Sound:</span>
                 <input type="checkbox" checked id="enable_sound">
             </div>
@@ -122,14 +168,16 @@
                 <input type="checkbox" checked
                 id="resize_smoothing">
             </div>
-        </div>
-        <div class="button_rack">
-            <button id="settings_close_button" class="center">Close Settings</button>
+        </div></div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
         </div>
     </div>
-    <div id="instructions" class="window">
-        <div id="keycodes">
-            <h1>Keyboard Controls:</h1>
+    <div id="instructions" class="modal hide fade">
+        <div class="modal-header">
+            <h3>Controls</h3>
+        </div>
+        <div class="modal-body"><div id="keycodes">
             <ul>
                 <li>X/J are A.</li>
                 <li>Z/Y/Q are B.</li>
@@ -138,9 +186,9 @@
                 <li>The d-pad is the control pad.</li>
                 <li>The escape key (esc) allows you to get in and out of fullscreen mode.</li>
             </ul>
-        </div>
-        <div class="button_rack">
-            <button id="instructions_close_button" class="center">Close Instructions</button>
+        </div></div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
         </div>
     </div>
     <div id="input_select" class="window">
@@ -187,30 +235,6 @@
             <button id="freeze_list_close_button" class="right">Close Freeze State List</button>
         </div>
     </div>
-    <ul class="menu" id="GameBoy_file_popup">
-        <li>Open As
-            <ul class="menu">
-                <li id="data_uri_clicker">Base 64 Encoding</li>
-                <li id="external_file_clicker">URL Address</li>
-                <li id="internal_file_clicker">Local File</li>
-            </ul>
-        </li>
-        <li id="save_SRAM_state_clicker">Save Game Memory</li>
-        <li id="save_state_clicker">Save Freeze State</li>
-        <li id="set_volume">Set Volume</li>
-        <li id="set_speed">Set Speed</li>
-        <li id="restart_cpu_clicker">Restart</li>
-        <li id="run_cpu_clicker">Resume</li>
-        <li id="kill_cpu_clicker">Pause</li>
-    </ul>
-    <ul class="menu" id="GameBoy_view_popup">
-        <li id="view_terminal">Terminal</li>
-        <li id="view_instructions">Instructions</li>
-        <li id="view_importer">Save Importer</li>
-        <li id="local_storage_list_menu">Save Manager</li>
-        <li id="freeze_list_menu">Freeze State Manager</li>
-        <li id="view_fullscreen">Fullscreen Mode</li>
-    </ul>
     <div id="fullscreenContainer">
         <canvas id="fullscreen" class="maximum"></canvas>
     </div>
