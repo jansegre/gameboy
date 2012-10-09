@@ -12,7 +12,6 @@ js:
 #	--compilation_level ADVANCED_OPTIMIZATIONS \#
 	[ -d js ] || mkdir -p $(jsDir)
 	java -jar tools/compiler.jar \
-	--js $(srcDir)/other/windowStack.js \
 	--js $(srcDir)/other/terminal.js  \
 	--js $(srcDir)/other/base64.js \
 	--js $(srcDir)/other/swfobject.js \

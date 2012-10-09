@@ -4,3 +4,5 @@
 /examples/js/gameboy.js
 # test
 /test/
+# tmp files
+*.swp

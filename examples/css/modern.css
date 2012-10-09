@@ -1,0 +1,22 @@
+body {
+	padding-top: 60px;
+}
+
+canvas#mainCanvas {
+	height: 144px;
+	width: 160px;
+}
+
+canvas#fullscreen.minimum {
+	height: 144px;
+	width: 160px;
+}
+
+canvas#fullscreen.maximum {
+	position: static;
+	height: 100%;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
