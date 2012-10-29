@@ -127,47 +127,39 @@
             <h3>Settings</h3>
         </div>
         <div class="modal-body"><div id="toggle_settings">
-            <div class="setting"><span>Enable Sound:</span>
-                <input type="checkbox" checked id="enable_sound">
-            </div>
-            <div class="setting"><span>GB mode has priority over GBC mode:</span>
-                <input type="checkbox"
-                id="disable_colors">
-            </div>
-            <div class="setting"><span>Use the BIOS ROM:</span>
-                <input type="checkbox" checked id="enable_gbc_bios">
-            </div>
-            <div class="setting"><span>Override ROM only cartridge typing to MBC1:</span>
-                <input type="checkbox"
-                checked id="rom_only_override">
-            </div>
-            <div class="setting"><span>Always allow reading and writing to the MBC banks:</span>
-                <input
-                type="checkbox" checked id="mbc_enable_override">
-            </div>
-            <div class="setting"><span>Colorize Classic GameBoy Palettes:</span>
-                <input type="checkbox"
-                checked id="enable_colorization">
-            </div>
-            <div class="setting"><span>Minimal view on fullscreen:</span>
-                <input type="checkbox" checked
-                id="do_minimal">
-            </div>
-            <div class="setting"><span>Resize canvas directly in JavaScript:</span>
-                <input type="checkbox"
-                id="software_resizing">
-            </div>
-            <div class="setting"><span>Disallow typed arrays to be used:</span>
-                <input type="checkbox" id="typed_arrays_disallow">
-            </div>
-            <div class="setting"><span>Use the DMG boot ROM instead of CGB:</span>
-                <input type="checkbox"
-                id="gb_boot_rom_utilized">
-            </div>
-            <div class="setting"><span>Smooth upon resizing canvas:</span>
-                <input type="checkbox" checked
-                id="resize_smoothing">
-            </div>
+            <label class="checkbox">
+                <input type="checkbox" checked id="enable_sound"> Enable Sound
+            </label>
+            <label class="checkbox">
+                <input type="checkbox" id="disable_colors"> GB mode has priority over GBC mode
+            </label>
+            <label class="checkbox">
+                <input type="checkbox" checked id="enable_gbc_bios"> Use the BIOS ROM
+            </label>
+            <label class="checkbox">
+                <input type="checkbox" checked id="rom_only_override"> Override ROM only cartridge typing to MBC1
+            </label>
+            <label class="checkbox">
+                <input type="checkbox" checked id="mbc_enable_override"> Always allow reading and writing to the MBC banks
+            </label>
+            <label class="checkbox">
+                <input type="checkbox" checked id="enable_colorization"> Colorize Classic GameBoy Palettes
+            </label>
+            <label class="checkbox">
+                <input type="checkbox" checked id="do_minimal"> Minimal view on fullscreen
+            </label>
+            <label class="checkbox">
+                <input type="checkbox" id="software_resizing"> Resize canvas directly in JavaScript
+            </label>
+            <label class="checkbox">
+                <input type="checkbox" id="typed_arrays_disallow"> Disallow typed arrays to be used
+            </label>
+            <label class="checkbox">
+                <input type="checkbox" id="gb_boot_rom_utilized"> Use the DMG boot ROM instead of CGB
+            </label>
+            <label class="checkbox">
+                <input type="checkbox" checked id="resize_smoothing"> Smooth upon resizing canvas
+            </label>
         </div></div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>
