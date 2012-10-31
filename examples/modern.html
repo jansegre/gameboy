@@ -54,7 +54,7 @@
                                 <ul class="dropdown-menu">
                                     <li><a href="#" id="data_uri_clicker"><i class="icon-magnet"></i> Base 64 Encoding</a></li>
                                     <li><a href="#" id="external_file_clicker"><i class="icon-globe"></i> URL Address</a></li>
-                                    <li><a href="#" id="internal_file_clicker"><i class="icon-file"></i> Local File</a></li>
+                                    <li><a href="#" id="internal_file_clicker"><i class="icon-file"></i> Local File</a><input type="file" id="local_file_open" class="hidden"></li>
                                 </ul>
                             </li>
                             <li><a href="#" id="save_SRAM_state_clicker"><i class="icon-ok"></i> Save Game Memory</a></li>
@@ -73,9 +73,9 @@
                         <ul class="dropdown-menu">
                             <li><a href="#" data-toggle="modal" data-target="#terminal">Terminal</a></li>
                             <li><a href="#" data-toggle="modal" data-target="#instructions">Controls</a></li>
-                            <li><a href="#" id="view_importer">Save Importer</a></li>
-                            <li><a href="#" id="local_storage_list_menu">Save Manager</a></li>
-                            <li><a href="#" id="freeze_list_menu">Freeze State Manager</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#save_importer">Save Importer</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#local_storage_listing">Save Manager</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#freeze_listing">Freeze State Manager</a></li>
                             <li><a href="#" id="view_fullscreen">Fullscreen Mode</a></li>
                         </ul>
                     </li>
@@ -183,51 +183,53 @@
             <a href="#" class="btn" data-dismiss="modal">Close</a>
         </div>
     </div>
-    <div id="input_select" class="window">
-        <form>
-            <input type="file" id="local_file_open">
-        </form>
-        <div class="button_rack">
-            <button id="input_select_close_button" class="center">Close File Input</button>
+    <div id="save_importer" class="modal hide fade">
+        <div class="modal-header">
+            <h3>Save Importer</h3>
+        </div>
+        <div class="modal-body">
+            <form>
+                <input type="file" id="save_open">
+            </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
         </div>
     </div>
-    <div id="save_importer" class="window">
-        <form>
-            <input type="file" id="save_open">
-        </form>
-        <div class="button_rack">
-            <button id="save_importer_close_button" class="center">Close Save Importer</button>
+    <div id="local_storage_listing" class="modal hide fade">
+        <div class="modal-header">
+            <h3>Save Manager</h3>
+        </div>
+        <div class="modal-body">
+            <div id="storageListingMasterContainer" class="storageList">
+                <div id="storageListingMasterContainerSub"></div>
+            </div>
+            <div id="download_all_storage"><a href="about:blank" id="download_local_storage_dba">Export all saved data.</a>
+            </div>
+            <div id="storagePopupMasterParent" class="storageList">
+                <div id="storagePopupMasterContainer"></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" id="local_storage_list_refresh_button">Refresh</a>
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
         </div>
     </div>
-    <div class="window" id="local_storage_listing">
-        <div id="storageListingMasterContainer" class="storageList">
-            <div id="storageListingMasterContainerSub"></div>
+    <div id="freeze_listing" class="modal hide fade">
+        <div class="modal-header">
+            <h3>Freeze Listing</h3>
         </div>
-        <div id="download_all_storage"><a href="about:blank" id="download_local_storage_dba">Export all saved data.</a>
+        <div class="modal-body">
+            <div id="freezeListingMasterContainer" class="storageList">
+                <div id="freezeListingMasterContainerSub"></div>
+            </div>
         </div>
-        <div class="button_rack">
-            <button id="local_storage_list_refresh_button" class="left">Refresh List</button>
-            <button id="local_storage_list_close_button" class="right">Close Storage List</button>
-        </div>
-    </div>
-    <div class="window" id="local_storage_popup">
-        <div id="storagePopupMasterParent" class="storageList">
-            <div id="storagePopupMasterContainer"></div>
-        </div>
-        <div class="button_rack">
-            <button id="local_storage_popup_close_button" class="center">Close Storage Popup</button>
+        <div class="modal-footer">
+            <a href="#" class="btn" id="freeze_list_refresh_button">Refresh</a>
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
         </div>
     </div>
-    <div class="window" id="freeze_listing">
-        <div id="freezeListingMasterContainer" class="storageList">
-            <div id="freezeListingMasterContainerSub"></div>
-        </div>
-        <div class="button_rack">
-            <button id="freeze_list_refresh_button" class="left">Refresh List</button>
-            <button id="freeze_list_close_button" class="right">Close Freeze State List</button>
-        </div>
-    </div>
-    <div id="fullscreenContainer">
+    <div id="fullscreenContainer" class="hide">
         <canvas id="fullscreen" class="maximum"></canvas>
     </div>
 </div>

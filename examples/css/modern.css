@@ -35,6 +35,14 @@ body {
 	padding: 4px;
 }
 
+#fullscreenContainer {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+}
+
 canvas {
 	margin: 0 auto 0;
 	width: 100%;
