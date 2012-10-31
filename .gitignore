@@ -1,7 +1,5 @@
 # Mac OS
 .DS_Store
-# Generated
-/examples/js/gameboy.js
 # test
 /test/
 # tmp files
