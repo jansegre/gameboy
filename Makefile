@@ -1,7 +1,7 @@
 jsDir=examples/js
 srcDir=src
 
-all:
+all: js
 
 clean:
 
@@ -10,7 +10,6 @@ clean:
 js:
 
 #	--compilation_level ADVANCED_OPTIMIZATIONS \#
-	[ -d js ] || mkdir -p $(jsDir)
 	java -jar tools/compiler.jar \
 	--js $(srcDir)/other/terminal.js  \
 	--js $(srcDir)/other/base64.js \
