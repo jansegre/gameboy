@@ -142,14 +142,15 @@ Resize.prototype.resizeWidthInterpolatedRGB = function (buffer) {
 	var secondWeight = 0;
 	var outputBuffer = this.widthBuffer;
 	//Handle for only one interpolation input being valid for start calculation:
-	for (var targetPosition = 0; weight < 0.25; targetPosition += 3, weight += ratioWeight) {
+	for (var targetPosition = 0; weight < 1/3; targetPosition += 3, weight += ratioWeight) {
 		for (finalOffset = targetPosition, pixelOffset = 0; finalOffset < this.widthPassResultSize; pixelOffset += this.originalWidthMultipliedByChannels, finalOffset += this.targetWidthMultipliedByChannels) {
 			outputBuffer[finalOffset] = buffer[pixelOffset];
 			outputBuffer[finalOffset + 1] = buffer[pixelOffset + 1];
 			outputBuffer[finalOffset + 2] = buffer[pixelOffset + 2];
 		}
 	}
-	weight -= 0.25;
+	//Adjust for overshoot of the last pass's counter:
+	weight -= 1/3;
 	for (var interpolationWidthSourceReadStop = this.widthOriginal - 1; weight < interpolationWidthSourceReadStop; targetPosition += 3, weight += ratioWeight) {
 		//Calculate weightings:
 		secondWeight = weight % 1;
@@ -235,7 +236,7 @@ Resize.prototype.resizeWidthInterpolatedRGBA = function (buffer) {
 	var secondWeight = 0;
 	var outputBuffer = this.widthBuffer;
 	//Handle for only one interpolation input being valid for start calculation:
-	for (var targetPosition = 0; weight < 0.25; targetPosition += 4, weight += ratioWeight) {
+	for (var targetPosition = 0; weight < 1/3; targetPosition += 4, weight += ratioWeight) {
 		for (finalOffset = targetPosition, pixelOffset = 0; finalOffset < this.widthPassResultSize; pixelOffset += this.originalWidthMultipliedByChannels, finalOffset += this.targetWidthMultipliedByChannels) {
 			outputBuffer[finalOffset] = buffer[pixelOffset];
 			outputBuffer[finalOffset + 1] = buffer[pixelOffset + 1];
@@ -243,7 +244,8 @@ Resize.prototype.resizeWidthInterpolatedRGBA = function (buffer) {
 			outputBuffer[finalOffset + 3] = buffer[pixelOffset + 3];
 		}
 	}
-	weight -= 0.25;
+	//Adjust for overshoot of the last pass's counter:
+	weight -= 1/3;
 	for (var interpolationWidthSourceReadStop = this.widthOriginal - 1; weight < interpolationWidthSourceReadStop; targetPosition += 4, weight += ratioWeight) {
 		//Calculate weightings:
 		secondWeight = weight % 1;
@@ -325,12 +327,13 @@ Resize.prototype.resizeHeightInterpolated = function (buffer) {
 	var secondWeight = 0;
 	var outputBuffer = this.heightBuffer;
 	//Handle for only one interpolation input being valid for start calculation:
-	for (; weight < 0.25; weight += ratioWeight) {
+	for (; weight < 1/3; weight += ratioWeight) {
 		for (pixelOffset = 0; pixelOffset < this.targetWidthMultipliedByChannels;) {
-			outputBuffer[finalOffset++] = buffer[pixelOffset++];
+			outputBuffer[finalOffset++] = Math.round(buffer[pixelOffset++]);
 		}
 	}
-	weight -= 0.25;
+	//Adjust for overshoot of the last pass's counter:
+	weight -= 1/3;
 	for (var interpolationHeightSourceReadStop = this.heightOriginal - 1; weight < interpolationHeightSourceReadStop; weight += ratioWeight) {
 		//Calculate weightings:
 		secondWeight = weight % 1;
@@ -339,13 +342,13 @@ Resize.prototype.resizeHeightInterpolated = function (buffer) {
 		pixelOffsetAccumulated = Math.floor(weight) * this.targetWidthMultipliedByChannels;
 		pixelOffsetAccumulated2 = pixelOffsetAccumulated + this.targetWidthMultipliedByChannels;
 		for (pixelOffset = 0; pixelOffset < this.targetWidthMultipliedByChannels; ++pixelOffset) {
-			outputBuffer[finalOffset++] = (buffer[pixelOffsetAccumulated + pixelOffset] * firstWeight) + (buffer[pixelOffsetAccumulated2 + pixelOffset] * secondWeight);
+			outputBuffer[finalOffset++] = Math.round((buffer[pixelOffsetAccumulated++] * firstWeight) + (buffer[pixelOffsetAccumulated2++] * secondWeight));
 		}
 	}
 	//Handle for only one interpolation input being valid for end calculation:
 	while (finalOffset < this.finalResultSize) {
 		for (pixelOffset = 0, pixelOffsetAccumulated = interpolationHeightSourceReadStop * this.targetWidthMultipliedByChannels; pixelOffset < this.targetWidthMultipliedByChannels; ++pixelOffset) {
-			outputBuffer[finalOffset++] = buffer[pixelOffsetAccumulated++];
+			outputBuffer[finalOffset++] = Math.round(buffer[pixelOffsetAccumulated++]);
 		}
 	}
 	return outputBuffer;
