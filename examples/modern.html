@@ -59,7 +59,6 @@
                             </li>
                             <li><a href="#" id="save_SRAM_state_clicker"><i class="icon-ok"></i> Save Game Memory</a></li>
                             <li><a href="#" id="save_state_clicker"><i class="icon-bookmark"></i> Save Freeze State</a></li>
-                            <li><a href="#" id="set_volume"><i class="icon-volume-up"></i> Set Volume</a></li>
                             <li><a href="#" id="set_speed"><i class="icon-forward"></i> Set Speed</a></li>
                             <li><a href="#" id="restart_cpu_clicker"><i class="icon-repeat"></i> Restart</a></li>
                             <li><a href="#" id="run_cpu_clicker"><i class="icon-play"></i> Resume</a></li>
@@ -130,6 +129,9 @@
             <label class="checkbox">
                 <input type="checkbox" checked id="enable_sound"> Enable Sound
             </label>
+            <label>
+                <i class="icon-volume-up"></i> Volume <input type="range" min="0" max="1.0" step="0.01" value="1.0" id="volume_bar">
+            </label>
             <label class="checkbox">
                 <input type="checkbox" id="disable_colors"> GB mode has priority over GBC mode
             </label>
@@ -188,9 +190,9 @@
             <h3>Save Importer</h3>
         </div>
         <div class="modal-body">
-            <form>
-                <input type="file" id="save_open">
-            </form>
+            <label>
+                <a href="#" id="internal_save_clicker"><i class="icon-file"></i> Local File</a><input type="file" id="save_open" class="hidden">
+            </label>
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>

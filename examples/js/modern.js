@@ -12,6 +12,10 @@ var keyZones = [
 	["select", [16]],
 	["start", [13]]
 ];
+var boostKey = 32;
+var boostSpeed = 7.0;
+var oldSpeed = 1.0;
+
 function windowingInitialize() {
 	cout("windowingInitialize() called.", 0);
 	//Hide some windows:
@@ -37,19 +41,13 @@ function windowingInitialize() {
 	$("#gb_boot_rom_utilized").attr('checked', settings[11]);
 	$("#resize_smoothing").attr('checked', settings[13]);
 }
+
 function registerGUIEvents() {
 	cout("In registerGUIEvents() : Registering GUI Events.", -1);
 	$("#terminal_clear_button").click(clear_terminal);
 	$("#local_storage_list_refresh_button").click(refreshStorageListing);
-	$("#input_select_close_button").click(function () { $("#input_select").hide() });
-	$("#instructions_close_button").click(function () { $("#instructions").hide() });
-	$("#local_storage_popup_close_button").click(function () { $("#local_storage_popup").hide() });
-	$("#local_storage_list_close_button").click(function () { $("#local_storage_listing").hide() });
-	$("#save_importer_close_button").click(function () { $("#save_importer").hide() });
-	$("#freeze_list_close_button").click(function () { $("#freeze_listing").hide() });
-	$("#local_storage_list_menu").click(function () { refreshStorageListing(); $("#local_storage_listing").show(); });
-	$("#freeze_list_menu").click(function () { refreshFreezeListing(); $("#freeze_listing").show(); });
-	$("#view_importer").click(function () { $("#save_importer").show() });
+	$("#local_storage_listing").show(refreshStorageListing);
+	$("#freeze_listing").show(refreshFreezeListing);
 	$(document).on("keydown", keyDown);
 	$(document).on("keyup",  function (event) {
 		if (event.keyCode == 27) {
@@ -61,15 +59,13 @@ function registerGUIEvents() {
 			keyUp(event);
 		}
 	});
-	addEvent("MozOrientation", window, GameBoyGyroSignalHandler);
-	addEvent("deviceorientation", window, GameBoyGyroSignalHandler);
-	//new popupMenu(document.getElementById("GameBoy_file_menu"), document.getElementById("GameBoy_file_popup"));
+	$(window).on("MozOrientation", GameBoyGyroSignalHandler);
+	$(window).on("deviceorientation", GameBoyGyroSignalHandler);
 	$("#data_uri_clicker").click(function () {
 		var datauri = prompt("Please input the ROM image's Base 64 Encoded Text:", "");
 		if (datauri != null && datauri.length > 0) {
 			try {
 				cout(Math.floor(datauri.length * 3 / 4) + " bytes of data submitted by form (text length of " + datauri.length + ").", 0);
-				initPlayer();
 				start(mainCanvas, base64_decode(datauri));
 			}
 			catch (error) {
@@ -93,7 +89,6 @@ function registerGUIEvents() {
 						try {
 							var romStream = base64_decode(arguments[1]);
 							cout(romStream.length + " bytes of base64 decoded data retrieved by XHR (text length of " + arguments[1].length + ").", 0);
-							initPlayer();
 							start(mainCanvas, romStream);
 						}
 						catch (error) {
@@ -107,13 +102,11 @@ function registerGUIEvents() {
 			}
 		}
 	});
-	$("#set_volume").click(function () {
-		if (GameBoyEmulatorInitialized()) {
-			var volume = prompt("Set the volume here:", "1.0");
-			if (volume != null && volume.length > 0) {
-				settings[3] = Math.min(Math.max(parseFloat(volume), 0), 1);
-				gameboy.changeVolume();
-			}
+	$("#volume_bar").on("change", function() {
+		if(GameBoyEmulatorInitialized()) {
+			var volume = $("#volume_bar").val()
+			settings[3] = Math.min(Math.max(parseFloat(volume), 0), 1);
+			gameboy.changeVolume();
 		}
 	});
 	$("#set_speed").click(function () {
@@ -125,15 +118,9 @@ function registerGUIEvents() {
 		}
 	});
 	$("#internal_file_clicker").click(function () {
-		var file_opener = document.getElementById("local_file_open");
-		$("#input_select").show();
-		file_opener.click();
-	});
-	$("#input_select").on("blur", function () {
-		$("#input_select").hide();
+		$("#local_file_open").click();
 	});
 	$("#local_file_open").on("change", function () {
-		$("#input_select").hide();
 		if (typeof this.files != "undefined") {
 			try {
 				if (this.files.length >= 1) {
@@ -145,7 +132,6 @@ function registerGUIEvents() {
 							if (this.readyState == 2) {
 								cout("file loaded.", 0);
 								try {
-									initPlayer();
 									start(mainCanvas, this.result);
 								}
 								catch (error) {
@@ -163,7 +149,6 @@ function registerGUIEvents() {
 						//Gecko 1.9.0, 1.9.1 (Non-Standard Method)
 						var romImageString = this.files[this.files.length - 1].getAsBinary();
 						try {
-							initPlayer();
 							start(mainCanvas, romImageString);
 						}
 						catch (error) {
@@ -183,6 +168,9 @@ function registerGUIEvents() {
 		else {
 			cout("could not find the handle on the file to open.", 2);
 		}
+	});
+	$("#internal_save_clicker").click(function () {
+		$("#save_open").click();
 	});
 	$("#save_open").on("change", function () {
 		$("#save_importer").hide();
@@ -240,11 +228,9 @@ function registerGUIEvents() {
 		if (GameBoyEmulatorInitialized()) {
 			try {
 				if (!gameboy.fromSaveState) {
-					initPlayer();
 					start(mainCanvas, gameboy.getROMImage());
 				}
 				else {
-					initPlayer();
 					openState(gameboy.savedStateFileName, mainCanvas);
 				}
 			}
@@ -261,44 +247,44 @@ function registerGUIEvents() {
 	$("#save_state_clicker").click(function () { save(); });
 	$("#save_SRAM_state_clicker").click(function () { saveSRAM(); });
 	$("#enable_sound").click(function () {
-		settings[0] = document.getElementById("enable_sound").checked;
+		settings[0] = $("#enable_sound").is(":checked");
 		if (GameBoyEmulatorInitialized()) {
 			gameboy.initSound();
 		}
 	});
 	$("#disable_colors").click(function () {
-		settings[2] = document.getElementById("disable_colors").checked;
+		settings[2] = $("#disable_colors").is(":checked");
 	});
 	$("#rom_only_override").click(function () {
-		settings[9] = document.getElementById("rom_only_override").checked;
+		settings[9] = $("#rom_only_override").is(":checked");
 	});
 	$("#mbc_enable_override").click(function () {
-		settings[10] = document.getElementById("mbc_enable_override").checked;
+		settings[10] = $("#mbc_enable_override").is(":checked");
 	});
 	$("#enable_gbc_bios").click(function () {
-		settings[1] = document.getElementById("enable_gbc_bios").checked;
+		settings[1] = $("#enable_gbc_bios").is(":checked");
 	});
 	$("#enable_colorization").click(function () {
-		settings[4] = document.getElementById("enable_colorization").checked;
+		settings[4] = $("#enable_colorization").is(":checked");
 	});
 	$("#do_minimal").click(function () {
-		showAsMinimal = document.getElementById("do_minimal").checked;
-		fullscreenCanvas.className = (showAsMinimal) ? "minimum" : "maximum";
+		showAsMinimal = $("#do_minimal").is(":checked");
+		fullscreenCanvas.className = (showAsMinimal) ? "minimum" : "maximum";//XXX
 	});
 	$("#software_resizing").click(function () {
-		settings[12] = document.getElementById("software_resizing").checked;
+		settings[12] = $("#software_resizing").is(":checked");
 		if (GameBoyEmulatorInitialized()) {
 			gameboy.initLCD();
 		}
 	});
 	$("#typed_arrays_disallow").click(function () {
-		settings[5] = document.getElementById("typed_arrays_disallow").checked;
+		settings[5] = $("#typed_arrays_disallow").is(":checked");
 	});
 	$("#gb_boot_rom_utilized").click(function () {
-		settings[11] = document.getElementById("gb_boot_rom_utilized").checked;
+		settings[11] = $("#gb_boot_rom_utilized").is(":checked");
 	});
 	$("#resize_smoothing").click(function () {
-		settings[13] = document.getElementById("resize_smoothing").checked;
+		settings[13] = $("#resize_smoothing").is(":checked");
 		if (GameBoyEmulatorInitialized()) {
 			gameboy.initLCD();
 		}
@@ -313,6 +299,13 @@ function registerGUIEvents() {
 function keyDown(event) {
 	var keyCode = event.keyCode;
 	var keyMapLength = keyZones.length;
+	if (keyCode == boostKey) {
+		if (GameBoyEmulatorInitialized()) {
+			event.preventDefault();
+			gameboy.setSpeed(boostSpeed);
+			return;
+		}
+	}
 	for (var keyMapIndex = 0; keyMapIndex < keyMapLength; ++keyMapIndex) {
 		var keyCheck = keyZones[keyMapIndex];
 		var keysMapped = keyCheck[1];
@@ -331,6 +324,13 @@ function keyDown(event) {
 function keyUp(event) {
 	var keyCode = event.keyCode;
 	var keyMapLength = keyZones.length;
+	if (keyCode == boostKey) {
+		if (GameBoyEmulatorInitialized()) {
+			event.preventDefault();
+			gameboy.setSpeed(oldSpeed);
+			return;
+		}
+	}
 	for (var keyMapIndex = 0; keyMapIndex < keyMapLength; ++keyMapIndex) {
 		var keyCheck = keyZones[keyMapIndex];
 		var keysMapped = keyCheck[1];
@@ -345,11 +345,6 @@ function keyUp(event) {
 			}
 		}
 	}
-}
-function initPlayer() {
-	document.getElementById("title").style.display = "none";
-	document.getElementById("port_title").style.display = "none";
-	document.getElementById("fullscreenContainer").style.display = "none";
 }
 function fullscreenPlayer() {
 	if (GameBoyEmulatorInitialized()) {
@@ -373,7 +368,6 @@ function fullscreenPlayer() {
 }
 function runFreeze(keyName) {
 	try {
-		initPlayer();
 		openState(keyName, mainCanvas);
 		$("#freeze_listing").hide();
 	}
@@ -569,73 +563,4 @@ function findKey(keyNum) {
 	}
 	return null;
 }
-//Some wrappers and extensions for non-DOM3 browsers:
-function isDescendantOf(ParentElement, toCheck) {
-	if (!ParentElement || !toCheck) {
-		return false;
-	}
-	//Verify an object as either a direct or indirect child to another object.
-	function traverseTree(domElement) {
-		while (domElement != null) {
-			if (domElement.nodeType == 1) {
-				if (isSameNode(domElement, toCheck)) {
-					return true;
-				}
-				if (hasChildNodes(domElement)) {
-					if (traverseTree(domElement.firstChild)) {
-						return true;
-					}
-				}
-			}
-			domElement = domElement.nextSibling;
-		}
-		return false;
-	}
-	return traverseTree(ParentElement.firstChild);
-}
-function hasChildNodes(oElement) {
-	return (typeof oElement.hasChildNodes == "function") ? oElement.hasChildNodes() : ((oElement.firstChild != null) ? true : false);
-}
-function isSameNode(oCheck1, oCheck2) {
-	return (typeof oCheck1.isSameNode == "function") ? oCheck1.isSameNode(oCheck2) : (oCheck1 === oCheck2);
-}
-function pageXCoord(event) {
-	if (typeof event.pageX == "undefined") {
-		return event.clientX + document.documentElement.scrollLeft;
-	}
-	return event.pageX;
-}
-function pageYCoord(event) {
-	if (typeof event.pageY == "undefined") {
-		return event.clientY + document.documentElement.scrollTop;
-	}
-	return event.pageY;
-}
-function mouseLeaveVerify(oElement, event) {
-	//Hook target element with onmouseout and use this function to verify onmouseleave.
-	return isDescendantOf(oElement, (typeof event.target != "undefined") ? event.target : event.srcElement) && !isDescendantOf(oElement, (typeof event.relatedTarget != "undefined") ? event.relatedTarget : event.toElement);
-}
-function mouseEnterVerify(oElement, event) {
-	//Hook target element with onmouseover and use this function to verify onmouseenter.
-	return !isDescendantOf(oElement, (typeof event.target != "undefined") ? event.target : event.srcElement) && isDescendantOf(oElement, (typeof event.relatedTarget != "undefined") ? event.relatedTarget : event.fromElement);
-}
-function addEvent(sEvent, oElement, fListener) {
-	try {	
-		oElement.addEventListener(sEvent, fListener, false);
-		cout("In addEvent() : Standard addEventListener() called to add a(n) \"" + sEvent + "\" event.", -1);
-	}
-	catch (error) {
-		oElement.attachEvent("on" + sEvent, fListener);	//Pity for IE.
-		cout("In addEvent() : Nonstandard attachEvent() called to add an \"on" + sEvent + "\" event.", -1);
-	}
-}
-function removeEvent(sEvent, oElement, fListener) {
-	try {	
-		oElement.removeEventListener(sEvent, fListener, false);
-		cout("In removeEvent() : Standard removeEventListener() called to remove a(n) \"" + sEvent + "\" event.", -1);
-	}
-	catch (error) {
-		oElement.detachEvent("on" + sEvent, fListener);	//Pity for IE.
-		cout("In removeEvent() : Nonstandard detachEvent() called to remove an \"on" + sEvent + "\" event.", -1);
-	}
-}
+
